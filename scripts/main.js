@@ -17,17 +17,17 @@ const gameBoard = (() => {
 const displayController = (() => {
     
     const createGameboard = () => {
-        for (let i = 0; i <= 9; i++) {
+        for (let i = 0; i < 9; i++) {
             const gameboardContainer = document.querySelector('#gameboard');
-            const gameboardElement = document.createElement('div');
-            gameboardElement.setAttribute('id', `element-${i}`);
-            gameboardElement.classList.add('gameboard-element');
-            gameboardContainer.appendChild(gameboardElement);
+            const gameboardCell = document.createElement('div');
+            gameboardCell.setAttribute('id', `cell-${i}`);
+            gameboardCell.classList.add('gameboard-cell');
+            gameboardContainer.appendChild(gameboardCell);
         }
     }
 
     const displayGameboard = () => {
-       const gamebordElement = document.querySelectorAll('.gameboard-element');
+       const gamebordCell = document.querySelectorAll('.gameboard-cell');
     }
 
     return {createGameboard}

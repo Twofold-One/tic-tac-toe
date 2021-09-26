@@ -1,23 +1,122 @@
 
-* {
+*, *::after, *::before {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+:root {
+    --cell-size: 100px;
+    --mark-size: calc(var(--cell-size) * .9);
+}
+
 html {
-    min-height: 100%;
+    min-height: 100vh;
 }
 
 body {
-    min-height: 100%;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-content: center;
     align-items: center;
+    justify-items: center;
     font-family: sans-serif;
 }
 
-#gameboard {
+.gameboard {
+    width: 50vw;
+    height: 50vh;
     display: grid;
+    grid-template-columns: repeat(3, auto);
+    grid-gap: 0px;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    align-content: center;
 }
+
+/*delete external border*/
+#cell-0,
+#cell-1,
+#cell-2 {
+    border-top: none;
+}
+
+#cell-2,
+#cell-5,
+#cell-8 {
+    border-right: none;
+}
+
+#cell-6,
+#cell-7,
+#cell-8 {
+    border-bottom: none;
+}
+
+#cell-0,
+#cell-3,
+#cell-6 {
+    border-left: none;
+}
+
+.gameboard-cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.gameboard-cell.x,
+.gameboard-cell.o {
+    cursor: not-allowed;
+}
+
+.gameboard-cell.x::before,
+.gameboard-cell.x::after {
+    content: '';
+    position: absolute;
+    width: calc(var(--mark-size) * .10);
+    height: var(--mark-size);
+    background-color: black;
+}
+
+.gameboard-cell.x::before {
+    transform: rotate(45deg);
+}
+.gameboard-cell.x::after {
+    transform: rotate(-45deg);
+}
+
+.gameboard-cell.o::before,
+.gameboard-cell.o::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+}
+
+.gameboard-cell.o::before {
+    width: var(--mark-size);
+    height: var(--mark-size);
+    background-color: black;
+}
+
+.gameboard-cell.o::after {
+    width: calc(var(--mark-size) * .8);
+    height: calc(var(--mark-size) * .8);
+    background-color: white;
+}
+
+.restart-btn-container button {
+    font-size: 2rem;
+    background-color: white;
+    border-radius: 5px;
+    padding: .2rem .2rem;
+}
+
