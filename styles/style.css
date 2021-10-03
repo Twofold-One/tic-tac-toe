@@ -25,6 +25,12 @@ body {
     font-family: sans-serif;
 }
 
+h1 {
+    background: -webkit-linear-gradient(#eee, #333);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 .gameboard {
     width: 50vw;
     height: 50vh;
