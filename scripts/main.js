@@ -4,7 +4,7 @@ const gameBoard = (() => {
     
     const clear = () => {
         for (let i = 0; i < 9; i++) {
-            gameBoard.elements[i] = '';
+            gameBoard.elements[i] = "";
         }
     };
 
@@ -13,7 +13,7 @@ const gameBoard = (() => {
 
 //displayController
 const displayController = (() => {
-    
+
     const createGameboard = () => {
         for (let i = 0; i < 9; i++) {
             const gameboardContainer = document.querySelector("#gameboard");
@@ -44,50 +44,44 @@ const displayController = (() => {
     return {createGameboard, displayGameboard}
 })();
 displayController.createGameboard();
-displayController.displayGameboard();
 
 //gameFlow module
 const gameFlow = (() => {
-    let xTurn;
-    const turn = () => {   
-        const gameboardCell = document.querySelectorAll("#cell");
-        gameboardCell.forEach((cellEl) => {
-            cellEl.addEventListener("click", cellClick, {once: true});
+    const stopGameWindow = document.querySelector("#stop-game-window");
+    const messageDisplay = document.querySelector("#gameflow-message");
+    const gameboardCell = document.querySelectorAll("#cell");
+    let xTurn = true;
+    let xWin;
+    let oWin;
+    let draw;
 
-            function cellClick(e) {
-                const cellEl = e.target;
-                const currentTurn = xTurn ? "o" : "x";
-                placeElement(cellEl, currentTurn);
-                switchTurn();
-                console.log(gameBoard.elements);
-                checkForWin();
-                displayController.displayGameboard();
-            };
+    function cellClick(e) {
+        const cellEl = e.target;
+        const currentTurn = xTurn ? "x" : "o";
+        placeElement(cellEl, currentTurn);
+        displayController.displayGameboard();
+        checkForWin(); 
+        switchTurn();
 
-            function placeElement(cellEl, currentTurn) {
-                gameBoard.elements[cellEl.dataset.cell] = currentTurn;
-            };
+        function placeElement(cellEl, currentTurn) {
+            gameBoard.elements[cellEl.dataset.cell] = currentTurn;
+        };
 
-            function switchTurn() {
-                xTurn = !xTurn;
-            };
-        });
+        function switchTurn() {
+            xTurn = !xTurn;
+        };
     };
 
-    const restart = () => {
-        const restartBtn = document.querySelector("#restart-button");
-        restartBtn.addEventListener("click", () => {
-            gameBoard.clear();
-            displayController.displayGameboard();
-            turn();
+    const turn = () => {   
+        gameboardCell.forEach((cellEl) => {
+            cellEl.addEventListener("click", cellClick, {once: true});
         });
     };
 
     const checkForWin = () => {
-        let currentElement = xTurn ? "x" : "o";
+        const currentElement = xTurn ? "x" : "o";
         let currentElementIndexes;
         
-
         const winCombinations = [
             [0, 1, 2],
             [3, 4, 5],
@@ -99,12 +93,27 @@ const gameFlow = (() => {
             [2, 4, 6]
         ];
         findElementIndex();
-        if (isElementWin()) {
-            console.log(`${currentElement}'s win!`)
-        }
 
+        if (isDraw()) {
+            draw = true;
+            messageDisplay.textContent = "Draw";
+            stopGame();
+            gameFlow.restart();
+        } else if (isElementWin()) {
+            if (currentElement === "x") {
+                xWin = true;
+                stopGame();
+                gameFlow.restart();
+                messageDisplay.textContent = "X's win!";
+            } else if (currentElement === "o") {
+                oWin = true;
+                messageDisplay.textContent = "O's win!";
+                stopGame();
+                gameFlow.restart();  
+            }
+        };
+         
         
-
         function findElementIndex() {
             let indices = [];
             let element = currentElement;
@@ -115,36 +124,47 @@ const gameFlow = (() => {
             }
             return currentElementIndexes = indices;
         }
-        
+
         function isElementWin() {
             return winCombinations.some(combination => {
                 return combination.every(index => {
                     return currentElementIndexes.includes(index);
                 });
             });
+        } 
+
+        function isDraw() {
+            return (!gameBoard.elements.some(emptyCell) && !isElementWin())
         }
-        console.log(xTurn, currentElementIndexes);
+
+            function emptyCell(cell) {
+                return cell === "";
+            }
     };
 
-    return {turn, restart, checkForWin};
+    const restart = () => {
+
+        const restartBtn = document.querySelector("#restart-button");
+        restartBtn.addEventListener("click", restartApp, {once: true});
+        
+        function restartApp() {
+            gameBoard.clear();
+            displayController.displayGameboard();
+            messageDisplay.textContent = "";
+            xTurn = true;
+            xWin = undefined;
+            oWin = undefined;
+            draw = undefined;
+            stopGameWindow.classList.remove("show");
+            turn();
+        }
+    }
+
+    const stopGame = () => {
+        stopGameWindow.classList.add("show");
+    }
+
+    return {xTurn, xWin, oWin, draw, turn, restart, checkForWin, stopGame};
 })();
-gameFlow.turn();
-//gameFlow.checkForWin();
 gameFlow.restart();
-
-
-
-// const arr1 = [
-//     [1, 2, 3],
-//     [4, 5, 6]
-// ];
-
-// const arr2 = [4, 5, 6];
-
-// let yes = arr2.every(item => {
-//     return arr1.some(combination => {
-//         return combination.includes(item);
-//     });
-// });
-
-// console.log(yes);
+gameFlow.turn();

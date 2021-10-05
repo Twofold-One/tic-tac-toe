@@ -31,6 +31,30 @@ h1 {
     -webkit-text-fill-color: transparent;
 }
 
+.stop-game-window {
+    display: none;
+    position: absolute;
+    width: 90vw;
+    height:50vh;
+    background-color: white;
+    opacity: 0.5;
+    z-index: 100;
+}
+
+.stop-game-window.show {
+    display: block;
+} 
+
+.gameflow-message {
+    width: 300px;
+    height: auto;
+    text-align: center;
+    margin: 20px 10px;
+    margin-bottom: 50px;
+    font-weight: 900;
+    font-size: 1.5em;
+}
+
 .gameboard {
     width: 50vw;
     height: 50vh;
